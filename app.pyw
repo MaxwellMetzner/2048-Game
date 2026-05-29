@@ -7,8 +7,8 @@ TILE_SIZE = 100
 TILE_MARGIN = 10
 WIDTH = SIZE * (TILE_SIZE + TILE_MARGIN) + TILE_MARGIN
 HEIGHT = WIDTH
-ANIMATION_STEPS = 7
-ANIMATION_DELAY_MS = 4
+ANIMATION_STEPS = 8
+ANIMATION_DELAY_MS = 2
 
 
 def color_to_hex(red, green, blue):
@@ -138,7 +138,7 @@ class Game2048App:
         return TILE_COLORS.get(value, EMPTY_TILE_COLOR)
 
     def get_tile_text_color(self, value):
-        if value >= 128:
+        if value >= 8:
             return LIGHT_FONT_COLOR
         return DARK_FONT_COLOR
 

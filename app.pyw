@@ -29,12 +29,17 @@ TILE_COLORS = {
     1024: color_to_hex(237, 197, 63),
     2048: color_to_hex(237, 194, 46),
 }
-FONT_COLOR = color_to_hex(119, 110, 101)
+DARK_FONT_COLOR = color_to_hex(119, 110, 101)
+LIGHT_FONT_COLOR = color_to_hex(249, 246, 242)
 OVERLAY_COLOR = color_to_hex(238, 228, 218)
 OVERLAY_PANEL_COLOR = color_to_hex(250, 248, 239)
 BUTTON_COLOR = color_to_hex(143, 122, 102)
 BUTTON_TEXT_COLOR = color_to_hex(249, 246, 242)
-TILE_FONT_FAMILY = "Helvetica"
+PREFERRED_TILE_FONT_FAMILIES = (
+    "Clear Sans",
+    "Arial",
+    "Helvetica",
+)
 TILE_FONT_SIZES = {
     1: -46,
     2: -46,
@@ -76,13 +81,16 @@ class Game2048App:
         self.canvas.bind("<Button-1>", self.handle_canvas_click)
         self.canvas.bind("<Motion>", self.handle_canvas_motion)
 
+        available_families = set(tkfont.families(self.root))
+        tile_font_family = self.get_preferred_font_family(available_families)
+
         self.tile_fonts = {
-            digits: tkfont.Font(family=TILE_FONT_FAMILY, size=size, weight="bold")
+            digits: tkfont.Font(family=tile_font_family, size=size, weight="bold")
             for digits, size in TILE_FONT_SIZES.items()
         }
-        self.overlay_title_font = tkfont.Font(family=TILE_FONT_FAMILY, size=-34, weight="bold")
-        self.overlay_text_font = tkfont.Font(family=TILE_FONT_FAMILY, size=-18, weight="bold")
-        self.button_font = tkfont.Font(family=TILE_FONT_FAMILY, size=-20, weight="bold")
+        self.overlay_title_font = tkfont.Font(family=tile_font_family, size=-34, weight="bold")
+        self.overlay_text_font = tkfont.Font(family=tile_font_family, size=-18, weight="bold")
+        self.button_font = tkfont.Font(family=tile_font_family, size=-20, weight="bold")
 
         bindings = {
             "<Left>": self.move_left,
@@ -118,6 +126,22 @@ class Game2048App:
         digits = min(len(str(value)), max(self.tile_fonts))
         return self.tile_fonts[digits]
 
+    def get_preferred_font_family(self, available_families):
+        for family in PREFERRED_TILE_FONT_FAMILIES:
+            if family in available_families:
+                return family
+        return "TkDefaultFont"
+
+    def get_tile_fill_color(self, value):
+        if value >= 2048:
+            return TILE_COLORS[2048]
+        return TILE_COLORS.get(value, EMPTY_TILE_COLOR)
+
+    def get_tile_text_color(self, value):
+        if value >= 128:
+            return LIGHT_FONT_COLOR
+        return DARK_FONT_COLOR
+
     def get_tile_bounds(self, row, col):
         x0 = col * (TILE_SIZE + TILE_MARGIN) + TILE_MARGIN
         y0 = row * (TILE_SIZE + TILE_MARGIN) + TILE_MARGIN
@@ -149,14 +173,14 @@ class Game2048App:
         y0 = center_y - TILE_SIZE / 2
         x1 = x0 + TILE_SIZE
         y1 = y0 + TILE_SIZE
-        fill_color = TILE_COLORS.get(value, EMPTY_TILE_COLOR)
+        fill_color = self.get_tile_fill_color(value)
 
         self.canvas.create_rectangle(x0, y0, x1, y1, fill=fill_color, outline=fill_color)
         self.canvas.create_text(
             center_x,
             center_y,
             text=str(value),
-            fill=FONT_COLOR,
+            fill=self.get_tile_text_color(value),
             font=self.get_tile_font(value),
         )
 
@@ -211,14 +235,14 @@ class Game2048App:
             WIDTH / 2,
             panel_y0 + 42,
             text="Game Over",
-            fill=FONT_COLOR,
+            fill=DARK_FONT_COLOR,
             font=self.overlay_title_font,
         )
         self.canvas.create_text(
             WIDTH / 2,
             panel_y0 + 78,
             text="No more moves left.",
-            fill=FONT_COLOR,
+            fill=DARK_FONT_COLOR,
             font=self.overlay_text_font,
         )
 

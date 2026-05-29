@@ -1,6 +1,6 @@
-# 2048 in Python (Pygame)
+# 2048 in Python (Tkinter)
 
-A small desktop clone of 2048 built with Pygame. The game runs in a single window, uses the classic 4x4 board, and keeps the core rules simple: slide tiles with the arrow keys, merge matching values, and try to reach 2048 before the board fills up.
+A small desktop clone of 2048 built with Tkinter from Python's standard library. The game runs in a single window, uses the classic 4x4 board, and keeps the core rules simple: slide tiles with the arrow keys, merge matching values, and try to reach 2048 before the board fills up.
 
 ## Gameplay
 - The board is a 4x4 grid of numbered tiles.
@@ -9,19 +9,17 @@ A small desktop clone of 2048 built with Pygame. The game runs in a single windo
 - After each valid move, a new tile spawns as a 2 or 4.
 
 ## What the app includes
-- Real-time keyboard input with Pygame.
+- Real-time keyboard input with Tkinter.
 - Random tile generation after successful moves.
 - Color-coded tiles for higher values.
-- Lightweight single-file implementation that is easy to read and extend.
+- Lightweight single-file implementation with no third-party dependency.
 
 ## Requirements
 - Python 3
-- Pygame
+- Tkinter (included with the standard Windows Python installer)
 
 ## Install
-```bash
-python -m pip install -r requirements.txt
-```
+No extra packages are required.
 
 ## Run
 ```bash
